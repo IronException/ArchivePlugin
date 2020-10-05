@@ -2,7 +2,7 @@ package com.github.ironexception.archiveplugin;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.github.ironexception.archiveplugin.plugins.CloneInventory;
+import com.github.ironexception.archiveplugin.plugins.ReadOnlyContainer;
 import com.github.ironexception.archiveplugin.plugins.ItemFrameGetter;
 import com.github.ironexception.archiveplugin.plugins.ShulkerPeek;
 import org.bukkit.entity.HumanEntity;
@@ -34,7 +34,7 @@ public final class ArchivePlugin extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new ShulkerPeek(protocolManager), this);
 
-        getServer().getPluginManager().registerEvents(new CloneInventory(), this);
+        getServer().getPluginManager().registerEvents(new ReadOnlyContainer(), this);
         //getServer().getPluginManager().registerEvents(new NoChestSteal(), this);
 
 

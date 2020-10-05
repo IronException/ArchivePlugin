@@ -20,7 +20,7 @@ import java.util.ArrayList;
 /**
  * @author l_amp before 2020-10-04
  */
-public class CloneInventory implements Listener {
+public class ReadOnlyContainer implements Listener {
 
     private final ArrayList<Inventory> ignoredInv = new ArrayList<>();
 
