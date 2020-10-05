@@ -1,0 +1,7 @@
+name: ArchivePlugin
+version: @version@
+main: com.github.ironexception.archiveplugin.ArchivePlugin
+authors: [ l_amp, IronException ]
+description: Adds useful features to the Archive server
+depend:
+  - ProtocolLib
