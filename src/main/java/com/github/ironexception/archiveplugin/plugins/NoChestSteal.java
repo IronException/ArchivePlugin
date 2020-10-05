@@ -23,10 +23,13 @@ public class NoChestSteal implements Listener {
 
 
     private boolean active = true;
-    private boolean debug = false;
 
     @EventHandler
     public void onPlayerInteract(final InventoryClickEvent event) {
+        if (canPlayerDebug(event.getWhoClicked()) && !active) {
+            return;
+        }
+
         if (event.getAction() == InventoryAction.NOTHING) {
             return;
         }
@@ -34,39 +37,13 @@ public class NoChestSteal implements Listener {
             return; // TODO actually Im not sure whether this is safe. but kinda needs to happen because it is null when you drop items
         }
 
-        if (canPlayerDebug(event.getWhoClicked()) && debug) {
-            event.getWhoClicked().sendMessage(ChatColor.BLACK + "-----------------------------");
-            event.getWhoClicked().sendMessage(ChatColor.GRAY + "click inventory holder: " + ChatColor.WHITE + event.getClickedInventory().getHolder());
-            event.getWhoClicked().sendMessage(ChatColor.GRAY + "click inventory type: " + ChatColor.WHITE + event.getClickedInventory().getType());
-            event.getWhoClicked().sendMessage(ChatColor.GRAY + "action: " + ChatColor.WHITE + event.getAction());
-            event.getWhoClicked().sendMessage(ChatColor.GRAY + "location: " + ChatColor.WHITE + event.getClickedInventory().getLocation());
-            event.getWhoClicked().sendMessage(ChatColor.GRAY + "title and name: " + ChatColor.WHITE + event.getClickedInventory().getTitle() + ChatColor.GRAY + " and " + ChatColor.WHITE + event.getClickedInventory().getName());
-            event.getWhoClicked().sendMessage(ChatColor.GRAY + "handler list size: " + ChatColor.WHITE + InventoryClickEvent.getHandlerList().getRegisteredListeners().length);
-
-        }
-
-
         // TODO WARNING the type has to be of the inventory (not the clicked inventory) otherwise it will show as the player and will always get accepted then
         if (shallCancel(event.getInventory().getType(), event.getClickedInventory(), event.getAction())) {
-            if (canPlayerDebug(event.getWhoClicked()) && !active) {
-                return;
-            }
-            if (canPlayerDebug(event.getWhoClicked()) && debug) {
-                event.getWhoClicked().sendMessage(ChatColor.RED + " cancelled");
-                event.getWhoClicked().sendMessage(ChatColor.GRAY + "human entity?: " + ChatColor.WHITE + (!(event.getClickedInventory().getHolder() instanceof HumanEntity)));
-
-            }
-
 
             event.setCancelled(true);
 
             final ItemStack currentItem = event.getCurrentItem();
             if (shouldGiveItem(currentItem, event.getCursor(), event.getClickedInventory())) {
-                if (canPlayerDebug(event.getWhoClicked()) && debug) {
-                    event.getWhoClicked().sendMessage(ChatColor.GRAY + "item: " + ChatColor.WHITE + event.getCurrentItem());
-                    event.getWhoClicked().sendMessage(ChatColor.GRAY + "cursor: " + ChatColor.WHITE + event.getWhoClicked().getItemOnCursor());
-
-                }
 
 
                 event.getWhoClicked().setItemOnCursor(currentItem);
@@ -154,6 +131,10 @@ public class NoChestSteal implements Listener {
 
     @EventHandler
     public void onPlayerDragEvent(final InventoryDragEvent event) {
+        if (canPlayerDebug(event.getWhoClicked()) && !active) {
+            return;
+        }
+
         if (isInventoryOkay(event.getInventory().getType())) {
             return;
         }
@@ -163,11 +144,6 @@ public class NoChestSteal implements Listener {
         }
         if (event.getRawSlots().stream().allMatch(slot -> slot >= event.getView().getTopInventory().getSize())) {
             return; // should work. because there is the player inventory
-        }
-
-
-        if (canPlayerDebug(event.getWhoClicked()) && !active) {
-            return;
         }
 
         event.setCancelled(true);
@@ -185,10 +161,6 @@ public class NoChestSteal implements Listener {
                 } else {
                     event.getPlayer().sendMessage(ChatColor.GREEN + "you can change items in chests for debugging");
                 }
-            } else if (event.getMessage().equals("debug steal plugin")) {
-                debug = !debug;
-                event.setCancelled(true);
-                event.getPlayer().sendMessage(ChatColor.GREEN + "toggled debug to " + debug);
             }
         }
     }
